@@ -31,7 +31,7 @@ model User {
 
 model Category {
   id                     String                   @id @default(uuid())
-  name                   String?
+  name                   String                   @unique
   Users_Menus_Categories Users_Menus_Categories[]
 }
 
@@ -46,7 +46,7 @@ model Menu {
 
 model Varient {
   id     String  @id @default(uuid())
-  name   String?
+  name   String  @unique
   Menu   Menu?   @relation(fields: [menuId], references: [id])
   menuId String?
 }
@@ -64,7 +64,7 @@ model Users_Menus_Categories {
 
 model Extra {
   id           String         @id @default(uuid())
-  name         String?
+  name         String         @unique
   Menus_Extras Menus_Extras[]
 }
 
