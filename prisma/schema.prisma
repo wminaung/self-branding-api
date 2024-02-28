@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id     String  @id @default(uuid())
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId String  @unique
+}
+
+model User {
+  id                     String                   @id @default(uuid())
+  email                  String                   @unique
+  name                   String?
+  image                  String?
+  profile                Profile?
+  Users_Menus_Categories Users_Menus_Categories[]
+}
+
+model Category {
+  id                     String                   @id @default(uuid())
+  name                   String?
+  Users_Menus_Categories Users_Menus_Categories[]
+}
+
+model Menu {
+  id                     String                   @id @default(uuid())
+  name                   String                   @unique
+  description            String?
+  Users_Menus_Categories Users_Menus_Categories[]
+  varients               Varient[]
+  Menus_Extras           Menus_Extras[]
+}
+
+model Varient {
+  id     String  @id @default(uuid())
+  name   String?
+  Menu   Menu?   @relation(fields: [menuId], references: [id])
+  menuId String?
+}
+
+model Users_Menus_Categories {
+  id String @id @default(uuid())
+
+  User       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+  Menu       Menu?     @relation(fields: [menuId], references: [id])
+  menuId     String?
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+}
+
+model Extra {
+  id           String         @id @default(uuid())
+  name         String?
+  Menus_Extras Menus_Extras[]
+}
+
+model Menus_Extras {
+  id      String  @id @default(uuid())
+  Menu    Menu?   @relation(fields: [menuId], references: [id])
+  menuId  String?
+  Extra   Extra?  @relation(fields: [extraId], references: [id])
+  extraId String?
+}
