@@ -10,9 +10,11 @@ export async function GET(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const menu = await prisma.menu.findUnique({ where: { id: params.id } });
+  const category = await prisma.category.findUnique({
+    where: { id: params.id },
+  });
 
-  const response = NextResponse.json(menu, { status: 200 });
+  const response = NextResponse.json(category, { status: 200 });
   return response;
 }
 
@@ -20,9 +22,11 @@ export async function DELETE(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const deletedMenu = await prisma.menu.delete({ where: { id: params.id } });
+  const deletedCategory = await prisma.category.delete({
+    where: { id: params.id },
+  });
 
-  const response = NextResponse.json(deletedMenu, { status: 200 });
+  const response = NextResponse.json(deletedCategory, { status: 200 });
   return response;
 }
 
@@ -30,14 +34,14 @@ export async function PUT(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const data = (await req.json()) as Prisma.MenuUpdateInput;
+  const data = (await req.json()) as Prisma.CategoryUpdateInput;
   console.log(data);
 
-  const editedMenu = await prisma.menu.update({
+  const editedCategory = await prisma.category.update({
     where: { id: params.id },
     data: data,
   });
 
-  const response = NextResponse.json(editedMenu, { status: 200 });
+  const response = NextResponse.json(editedCategory, { status: 200 });
   return response;
 }
