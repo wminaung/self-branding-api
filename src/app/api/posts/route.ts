@@ -2,7 +2,7 @@ import { prisma } from "@/db";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-// Get all varients
+// Get all Blogs
 export async function GET(req: NextRequest, gg: any) {
   const { searchParams } = req.nextUrl;
 
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest, gg: any) {
   const order =
     orderStr == "desc" ? Prisma.SortOrder.desc : Prisma.SortOrder.asc;
 
-  const orderBy: Prisma.VarientOrderByWithAggregationInput = { id: order };
+  const orderBy: Prisma.BlogOrderByWithAggregationInput = { id: order };
 
   const skip: number | undefined = Number(skipStr) || undefined;
   let take: number | undefined = Number(takeStr) || 10;
@@ -22,21 +22,22 @@ export async function GET(req: NextRequest, gg: any) {
     take = undefined;
   }
 
-  const varients = await prisma.varient.findMany({
+  const blogs = await prisma.blog.findMany({
     skip: skip,
     take: take,
     orderBy,
   });
 
-  const response = NextResponse.json(varients, { status: 200 });
+  const response = NextResponse.json(blogs, { status: 200 });
   return response;
 }
 
+// create Blog
 export async function POST(req: NextRequest) {
-  const data = (await req.json()) as Prisma.VarientCreateInput;
+  const data = (await req.json()) as Prisma.BlogCreateInput;
 
-  const newVarient = await prisma.varient.create({ data: data });
+  const newBlog = await prisma.blog.create({ data: data });
 
-  const response = NextResponse.json(newVarient, { status: 200 });
+  const response = NextResponse.json(newBlog, { status: 200 });
   return response;
 }

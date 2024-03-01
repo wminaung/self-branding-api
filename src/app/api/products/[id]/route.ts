@@ -6,38 +6,43 @@ interface Slug {
   params: { id: string };
 }
 
+// get product by :id
 export async function GET(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const menu = await prisma.menu.findUnique({ where: { id: params.id } });
+  const product = await prisma.product.findUnique({ where: { id: params.id } });
 
-  const response = NextResponse.json(menu, { status: 200 });
+  const response = NextResponse.json(product, { status: 200 });
   return response;
 }
 
+// delete product by :id
 export async function DELETE(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const deletedMenu = await prisma.menu.delete({ where: { id: params.id } });
+  const deletedProduct = await prisma.product.delete({
+    where: { id: params.id },
+  });
 
-  const response = NextResponse.json(deletedMenu, { status: 200 });
+  const response = NextResponse.json(deletedProduct, { status: 200 });
   return response;
 }
 
+// update product by :id
 export async function PUT(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const data = (await req.json()) as Prisma.MenuUpdateInput;
+  const data = (await req.json()) as Prisma.ProductUpdateInput;
   console.log(data);
 
-  const editedMenu = await prisma.menu.update({
+  const editedProduct = await prisma.product.update({
     where: { id: params.id },
     data: data,
   });
 
-  const response = NextResponse.json(editedMenu, { status: 200 });
+  const response = NextResponse.json(editedProduct, { status: 200 });
   return response;
 }

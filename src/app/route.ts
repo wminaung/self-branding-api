@@ -1,9 +1,13 @@
-// route handler enabling draft mode
-import { draftMode } from 'next/headers'
-
+import { NextRequest, NextResponse } from "next/server";
+import { readFileSync } from "fs";
 export async function GET(req: Request) {
   const path = req.url;
-     draftMode().enable()
-  
-  return   new Response(path)
+
+  const data = readFileSync(".env", "utf-8");
+
+  const response = NextResponse.json({ path, data }, { status: 200 });
+
+  return response;
 }
+
+// export const runtime = "nodejs"; // 'nodejs' (default) | 'edge'
