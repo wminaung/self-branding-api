@@ -1,4 +1,5 @@
 import { prisma } from "@/db";
+import { Api } from "@/types/Api";
 import { isAuthorized } from "@/utils/auth";
 import { Prisma } from "@prisma/client";
 import { cookies, headers } from "next/headers";
@@ -36,7 +37,12 @@ export async function GET(req: NextRequest, gg: any) {
 
 // create Product
 export async function POST(req: NextRequest) {
-  const data = (await req.json()) as Prisma.ProductCreateInput;
+  const { description, discountPrice, name, price } =
+    (await req.json()) as Api.ProductPayload.POST;
+
+  if (!description || !name) {
+    return NextResponse.json({ error: "no data" }, { status: 404 });
+  }
 
   // jwt check start
   const authorization = req.headers.get("authorization");
@@ -48,7 +54,12 @@ export async function POST(req: NextRequest) {
   // jwt check end
 
   const newProduct = await prisma.product.create({
-    data: { ...data, userId: validUser.id } as Prisma.ProductCreateInput,
+    data: {
+      description,
+      name,
+      price,
+      discountPrice,
+    },
   });
 
   const response = NextResponse.json(newProduct, { status: 200 });

@@ -14,10 +14,11 @@ datasource db {
 }
 
 model Profile {
-  id     String  @id @default(uuid())
-  bio    String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId String  @unique
+  id  String  @id @default(uuid())
+  bio String?
+
+  user   User?  @relation(fields: [userId], references: [id])
+  userId String @unique
 }
 
 model User {
@@ -28,8 +29,9 @@ model User {
   image    String?
   password String
 
-  authType AuthType  @default(ADMIN)
+  authType AuthType @default(ADMIN)
   Profile  Profile?
+
   Reviews  Review[]
   Products Product[]
   Blogs    Blog[]
@@ -41,8 +43,8 @@ model Blog {
   title   String  @unique
   content String
 
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  User   User?  @relation(fields: [userId], references: [id])
+  userId String
 }
 
 model Product {
@@ -54,7 +56,7 @@ model Product {
 
   Reviews Review[]
   User    User?    @relation(fields: [userId], references: [id])
-  userId  String?
+  userId  String
 }
 
 model Review {
@@ -64,9 +66,9 @@ model Review {
   rating  Int     @default(0) // 0.0 to 5 // 0.5 - 1.0 - 1.5
 
   User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+  userId    String
   Product   Product? @relation(fields: [productId], references: [id])
-  productId String?
+  productId String
 }
 
 enum AuthType {

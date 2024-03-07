@@ -25,9 +25,11 @@ export async function POST(req: NextRequest) {
     );
   console.log("user");
 
+  // passwording chacking
   const isValidCredential = comparePasswordSync(password, user.password);
 
   const validUser = { ...user, password: undefined };
+
   // JWT section
   const token = jwt.sign(validUser, configs.jwtSecret);
   cookies().set("token", token, { secure: true });

@@ -1,5 +1,7 @@
 import { prisma } from "@/db";
-import { Prisma } from "@prisma/client";
+import { Api } from "@/types/Api";
+import { isAuthorized } from "@/utils/auth";
+import { Blog, Prisma } from "@prisma/client";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -35,9 +37,27 @@ export async function GET(req: NextRequest, gg: any) {
 
 // create Blog
 export async function POST(req: NextRequest) {
-  const data = (await req.json()) as Prisma.BlogCreateInput;
+  const { content, title } = (await req.json()) as Api.BlogPayload.POST;
 
-  const newBlog = await prisma.blog.create({ data: data });
+  if (!content || !title)
+    return NextResponse.json({ error: "no data" }, { status: 404 });
+
+  // jwt check start
+  const authorization = req.headers.get("authorization");
+  console.log(authorization);
+
+  const validUser = isAuthorized(authorization);
+  if (!validUser)
+    return NextResponse.json({ error: "unauthorize" }, { status: 404 });
+  // jwt check end
+
+  const newBlog = await prisma.blog.create({
+    data: {
+      content,
+      title,
+      userId: validUser.id,
+    },
+  });
 
   const response = NextResponse.json(newBlog, { status: 200 });
   return response;

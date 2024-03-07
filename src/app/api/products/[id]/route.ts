@@ -1,4 +1,5 @@
 import { prisma } from "@/db";
+import { Api } from "@/types/Api";
 import { isAuthorized } from "@/utils/auth";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
@@ -45,7 +46,7 @@ export async function PUT(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const data = (await req.json()) as Prisma.ProductUpdateInput;
+  const data = (await req.json()) as Api.ProductPayload.PUT;
   console.log(data);
 
   // jwt check start

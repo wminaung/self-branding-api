@@ -1,4 +1,6 @@
 import { prisma } from "@/db";
+import { Api } from "@/types/Api";
+import { isAuthorized } from "@/utils/auth";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -22,8 +24,17 @@ export async function DELETE(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
+  // jwt check start
+  const authorization = req.headers.get("authorization");
+  console.log(authorization);
+
+  const validUser = isAuthorized(authorization);
+  if (!validUser)
+    return NextResponse.json({ error: "unauthorize" }, { status: 404 });
+  // jwt check end
+
   const deletedBlog = await prisma.blog.delete({
-    where: { id: params.id },
+    where: { id: params.id, userId: validUser.id },
   });
 
   const response = NextResponse.json(deletedBlog, { status: 200 });
@@ -35,11 +46,20 @@ export async function PUT(req: NextRequest, { params }: Slug) {
   if (!params.id)
     return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const data = (await req.json()) as Prisma.BlogUpdateInput;
+  const data = (await req.json()) as Api.BlogPayload.PUT;
   console.log(data);
 
+  // jwt check start
+  const authorization = req.headers.get("authorization");
+  console.log(authorization);
+
+  const validUser = isAuthorized(authorization);
+  if (!validUser)
+    return NextResponse.json({ error: "unauthorize" }, { status: 404 });
+  // jwt check end
+
   const editedBlog = await prisma.blog.update({
-    where: { id: params.id },
+    where: { id: params.id, userId: validUser.id },
     data: data,
   });
 
