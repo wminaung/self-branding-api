@@ -38,12 +38,14 @@ export async function GET(req: NextRequest, gg: any) {
 export async function POST(req: NextRequest) {
   const data = (await req.json()) as Prisma.ProductCreateInput;
 
-  // const authorization = headers().get("authorization");
+  // jwt check start
   const authorization = req.headers.get("authorization");
   console.log(authorization);
+
   const validUser = isAuthorized(authorization);
   if (!validUser)
     return NextResponse.json({ error: "unauthorize" }, { status: 404 });
+  // jwt check end
 
   const newProduct = await prisma.product.create({
     data: { ...data, userId: validUser.id } as Prisma.ProductCreateInput,
