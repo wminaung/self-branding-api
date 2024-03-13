@@ -7,7 +7,7 @@ import { INTERNALS } from "next/dist/server/web/spec-extension/request";
 export async function middleware(req: NextRequest) {
   console.log("I am middleware", req.nextUrl, req.url);
 
-  return NextResponse.redirect(new URL("/home", req.url));
+  // return NextResponse.redirect(new URL("/home", req.url));
 }
 
 // See "Matching Paths" below to learn more

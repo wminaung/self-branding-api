@@ -18,7 +18,9 @@ model Profile {
   bio String?
 
   user   User?  @relation(fields: [userId], references: [id])
-  userId String @unique
+  userId String @unique @map("user_id")
+
+  @@map("profile")
 }
 
 model User {
@@ -30,11 +32,13 @@ model User {
   password String
 
   authType AuthType @default(ADMIN)
-  Profile  Profile?
 
+  Profile  Profile?
   Reviews  Review[]
   Products Product[]
   Blogs    Blog[]
+
+  @@map("user")
 }
 
 model Blog {
@@ -44,7 +48,9 @@ model Blog {
   content String
 
   User   User?  @relation(fields: [userId], references: [id])
-  userId String
+  userId String @map("user_id")
+
+  @@map("blog")
 }
 
 model Product {
@@ -56,7 +62,9 @@ model Product {
 
   Reviews Review[]
   User    User?    @relation(fields: [userId], references: [id])
-  userId  String
+  userId  String   @map("user_id")
+
+  @@map("product")
 }
 
 model Review {
@@ -66,9 +74,11 @@ model Review {
   rating  Int     @default(0) // 0.0 to 5 // 0.5 - 1.0 - 1.5
 
   User      User?    @relation(fields: [userId], references: [id])
-  userId    String
+  userId    String   @map("user_id")
   Product   Product? @relation(fields: [productId], references: [id])
-  productId String
+  productId String   @map("product_id")
+
+  @@map("review")
 }
 
 enum AuthType {
@@ -79,5 +89,15 @@ enum AuthType {
 model EmailSubscriber {
   id       String  @id @default(uuid())
   email    String  @unique
-  isActive Boolean @default(true)
+  isActive Boolean @default(true) @map("is_active")
+
+  @@map("email_subscriber")
+}
+
+model DumpData {
+  id       String  @id @default(uuid())
+  isDelete Boolean @map("is_delete")
+  userId   String  @map("user_id")
+
+  @@map("dump_data")
 }
