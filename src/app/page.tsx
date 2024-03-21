@@ -5,8 +5,8 @@ import { useEffect } from "react";
 const fetchData = () => {
   return new Promise((resolve, reject) => {
     const promises = [
-      fetch(`http://localhost:3000/api/blogs`).then((resB) => resB.json()),
-      fetch(`http://localhost:3000/api/products`).then((resP) => resP.json()),
+      fetch(`http://localhost:4000/api/blogs`).then((resB) => resB.json()),
+      fetch(`http://localhost:4000/api/products`).then((resP) => resP.json()),
     ];
 
     Promise.all(promises)

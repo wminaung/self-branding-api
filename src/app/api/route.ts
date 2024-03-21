@@ -1,6 +1,6 @@
 import { prisma } from "@/db";
 import { Api } from "@/types/Api";
-import { isAuthorized } from "@/utils/auth";
+import { isAuthorizedByAdmin } from "@/utils/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

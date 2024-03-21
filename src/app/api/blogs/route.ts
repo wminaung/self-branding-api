@@ -1,6 +1,6 @@
 import { prisma } from "@/db";
 import { Api } from "@/types/Api";
-import { isAuthorized } from "@/utils/auth";
+import { isAuthorizedByAdmin } from "@/utils/auth";
 import { Blog, Prisma } from "@prisma/client";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   const authorization = req.headers.get("authorization");
   console.log(authorization);
 
-  const validUser = isAuthorized(authorization);
+  const validUser = isAuthorizedByAdmin(authorization);
   if (!validUser)
     return NextResponse.json({ error: "unauthorize" }, { status: 404 });
   // jwt check end

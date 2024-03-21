@@ -1,5 +1,7 @@
 import { configs } from "@/configs/configs";
+import { prisma } from "@/db";
 import { JwtUser } from "@/types/jwt";
+import { AuthType } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextResponse } from "next/server";
@@ -20,7 +22,9 @@ export const comparePasswordSync = (
   return isValid;
 };
 
-export const isAuthorized = (authorization: string | null): JwtUser | null => {
+export const isAuthorizedByAdmin = (
+  authorization: string | null
+): JwtUser | null => {
   if (!authorization || typeof authorization !== "string") return null;
   const token = authorization.split(" ")[1];
 
@@ -28,7 +32,9 @@ export const isAuthorized = (authorization: string | null): JwtUser | null => {
 
   const user = jwt.verify(token, configs.jwtSecret) as JwtUser;
 
-  if (typeof user === "string") {
+  const isAdmin = !!user.authType && user.authType === AuthType.ADMIN;
+
+  if (typeof user === "string" || !isAdmin) {
     return null;
   }
 

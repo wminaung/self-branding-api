@@ -1,6 +1,6 @@
 import { prisma } from "@/db";
 import { Api } from "@/types/Api";
-import { isAuthorized } from "@/utils/auth";
+import { isAuthorizedByAdmin } from "@/utils/auth";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -28,7 +28,7 @@ export async function DELETE(req: NextRequest, { params }: Slug) {
   const authorization = req.headers.get("authorization");
   console.log(authorization);
 
-  const validUser = isAuthorized(authorization);
+  const validUser = isAuthorizedByAdmin(authorization);
   if (!validUser)
     return NextResponse.json({ error: "unauthorize" }, { status: 404 });
   // jwt check end
@@ -53,7 +53,7 @@ export async function PUT(req: NextRequest, { params }: Slug) {
   const authorization = req.headers.get("authorization");
   console.log(authorization);
 
-  const validUser = isAuthorized(authorization);
+  const validUser = isAuthorizedByAdmin(authorization);
   if (!validUser)
     return NextResponse.json({ error: "unauthorize" }, { status: 404 });
   // jwt check end
