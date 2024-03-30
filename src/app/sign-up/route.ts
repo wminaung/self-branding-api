@@ -1,16 +1,32 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { hashPasswordSync } from "@/utils/auth";
 import { prisma } from "@/db";
 
+interface UserSignupPayloadType extends User {
+  isGoogleAuth?: boolean | null;
+}
+
 // register page
 export async function POST(req: NextRequest) {
   try {
-    let { name, email, password, username, image } =
-      (await req.json()) as Prisma.UserCreateInput;
+    let { isGoogleAuth, name, email, password, username, image } =
+      (await req.json()) as UserSignupPayloadType;
 
-    if (!email || !password || !name)
+    if (isGoogleAuth) {
+      password = "hello";
+    }
+    console.log("api up", {
+      isGoogleAuth,
+      name,
+      email,
+      password,
+      username,
+      image,
+    });
+
+    if (!email || !name || !password)
       return NextResponse.json(
         { error: "email,name or password is needed" },
         { status: 404 }

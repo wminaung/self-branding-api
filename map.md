@@ -1,27 +1,34 @@
+export enum Auth {
+SIGN_IN = "SignIn",
+SIGN_UP = "SignUp",
+}
 
-01. register - http://localhost:3000/sign-up
+1.  register - http://localhost:3000/sign-up
 
-    -POST  :
+        -POST  :
 
-    -payload : 
-{
+        -payload :
+
+    {
     "name": "aung",
     "email": "aung@gmail.com",
-    "password": "hello"
-}
-    
-    -response : (no cookie set)
-    {...user}
+    "password": "hello",
+    isGoogleAuth?: boolean | null;
+    }
 
+        -response : (no cookie set)
+        {...user}
 
-02. login - http://localhost:3000/sign-in
+2.  login - http://localhost:3000/sign-in
 
-    -POST :
-    -payload :
-{
+        -POST :
+        -payload :
+
+    {
     "email": "aung@gmail.com",
-    "password": "hello"
-}
+    "password": "hello",
+    isGoogleAuth?: boolean | null;
+    }
 
-    -response : (cookie set - <token> )
-    {...user}
+        -response : (cookie set - <token> )
+        {...user}

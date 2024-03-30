@@ -6,9 +6,15 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { configs } from "@/configs/configs";
 
+interface UserSigninPayloadType extends User {
+  isGoogleAuth?: boolean | null;
+}
+
 export async function POST(req: NextRequest) {
-  const { email, password } = (await req.json()) as User;
-  if (!email || !password)
+  const { email, password, isGoogleAuth } =
+    (await req.json()) as UserSigninPayloadType;
+
+  if (!email)
     return NextResponse.json({ error: "credential error" }, { status: 404 });
   console.log("user");
 
