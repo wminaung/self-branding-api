@@ -34,7 +34,7 @@ model User {
   imageUrl String?  @map("image_url")
   image    String?
   password String
-  authType AuthType @default(ADMIN)
+  authType AuthType @default(USER)
 
   Profile  Profile?
   Reviews  Review[]
